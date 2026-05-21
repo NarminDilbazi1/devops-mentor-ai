@@ -1,7 +1,16 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-app = FastAPI()
+app = FastAPI()   # 👈 BU MÜTLƏQ ƏVVƏL OLMAQLIDIR
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 class LogRequest(BaseModel):
     text: str
@@ -27,13 +36,12 @@ def analyze_log(request: LogRequest):
     elif "permission denied" in log:
         return {
             "problem": "Permission denied error",
-            "root_cause": "Insufficient file/system permissions",
-            "fix": "Check user permissions or use sudo"
+            "root_cause": "Insufficient permissions",
+            "fix": "Use sudo or check file permissions"
         }
 
-    else:
-        return {
-            "problem": "Unknown error",
-            "root_cause": "Cannot classify log",
-            "fix": "Check logs manually or extend rules"
-        }
+    return {
+        "problem": "Unknown error",
+        "root_cause": "Cannot classify log",
+        "fix": "Extend rules"
+    }
