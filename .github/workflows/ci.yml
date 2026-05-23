@@ -1,0 +1,20 @@
+name: DevOps Mentor AI CI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Backend
+        run: docker build -t devops-backend ./backend
+
+      - name: Build Frontend
+        run: docker build -t devops-frontend ./frontend
